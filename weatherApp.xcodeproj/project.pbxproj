@@ -12,6 +12,7 @@
 		6515F6E62C3664300039DE58 /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6515F6E52C3664300039DE58 /* WeatherView.swift */; };
 		6515F6E82C367B500039DE58 /* ForecastViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6515F6E72C367B500039DE58 /* ForecastViewModel.swift */; };
 		6515F6EA2C367F470039DE58 /* ForecastListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6515F6E92C367F470039DE58 /* ForecastListViewModel.swift */; };
+		6515F6ED2C36A0000039DE58 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6515F6EC2C36A0000039DE58 /* SDWebImageSwiftUI */; };
 		654EA66B2C33FBA100566C93 /* weatherAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EA66A2C33FBA100566C93 /* weatherAppApp.swift */; };
 		654EA66F2C33FBA200566C93 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 654EA66E2C33FBA200566C93 /* Assets.xcassets */; };
 		654EA6722C33FBA200566C93 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 654EA6712C33FBA200566C93 /* Preview Assets.xcassets */; };
@@ -39,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6515F6ED2C36A0000039DE58 /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +129,9 @@
 			dependencies = (
 			);
 			name = weatherApp;
+			packageProductDependencies = (
+				6515F6EC2C36A0000039DE58 /* SDWebImageSwiftUI */,
+			);
 			productName = weatherApp;
 			productReference = 654EA6672C33FBA100566C93 /* weatherApp.app */;
 			productType = "com.apple.product-type.application";
@@ -155,6 +160,9 @@
 				Base,
 			);
 			mainGroup = 654EA65E2C33FBA100566C93;
+			packageReferences = (
+				6515F6EB2C36A0000039DE58 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+			);
 			productRefGroup = 654EA6682C33FBA100566C93 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -400,6 +408,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6515F6EB2C36A0000039DE58 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6515F6EC2C36A0000039DE58 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6515F6EB2C36A0000039DE58 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 654EA65F2C33FBA100566C93 /* Project object */;
 }

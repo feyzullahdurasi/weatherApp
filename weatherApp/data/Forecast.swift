@@ -21,10 +21,7 @@ struct Forecast: Codable {
             let id: Int
             let description: String
             let icon: String
-            var weatherIconURL: URL {
-                let urlString1 = "https://openweathermap.org/img/wn/\(icon)@2x.png"
-                return URL(string: urlString1)!
-            }
+            
         }
         let weather: [Weather]
         let clouds: Int
@@ -36,4 +33,5 @@ struct Forecast: Codable {
     let list: [List]
 }
 //40.982099, 29.108262
+//c75fa45f4752adf0fa8c01456807b64d
 

@@ -68,4 +68,8 @@ struct ForecastViewModel {
     var humidity: String {
         return "Humidity: \(ForecastViewModel.numberFormatter.string(from: forecast.main.humidity as NSNumber) ?? "0")%"
     }
+    var weatherIconURL: URL {
+        let urlString1 = "https://openweathermap.org/img/wn/\(forecast.weather[0].icon)@2x.png"
+        return URL(string: urlString1)!
+    }
 }

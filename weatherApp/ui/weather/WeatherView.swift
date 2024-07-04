@@ -5,7 +5,7 @@
 //  Created by Feyzullah Durası on 4.07.2024.
 //
 
-
+import SDWebImageSwiftUI
 import SwiftUI
 
 struct WeatherView: View {
@@ -17,8 +17,8 @@ struct WeatherView: View {
         NavigationView {
             VStack {
                 Picker(selection: $forecastListVM.system, label: Text("System")) {
-                    Text("C").tag(0)
-                    Text("F").tag(1)
+                    Text("°C").tag(0)
+                    Text("°F").tag(1)
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .frame(width: 200)
@@ -42,10 +42,10 @@ struct WeatherView: View {
                             Text(day.day)
                                 .fontWeight(.bold)
                             HStack(alignment: .top) {
-                                Image(systemName: "hourglass")
-                                    .font(.title)
-                                    .frame(width: 50, height: 50)
-                                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.green))
+                                WebImage(url: day.weatherIconURL)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 75)
                                 VStack(alignment: .leading) {
                                     Text(day.overview)
                                     Text("Temprature: \(day.Temprature)")

@@ -7,12 +7,26 @@
 
 //import CoreLocation
 import Foundation
+import SwiftUI
 
 class ForecastListViewModel: ObservableObject {
     
     @Published var forecasts: [ForecastViewModel] = []
-    var location: String = ""
-    var system: Int = 0
+    @AppStorage("location") var location: String = ""
+    @AppStorage("system") var system: Int = 0 {
+    
+        didSet {
+            for i in 0..<forecasts.count {
+                forecasts[i].system = system
+            }
+        }
+    }
+    
+    init() {
+        if location == "" {
+            getWeatherForecast()
+        }
+    }
     
     
      func getWeatherForecast() {
@@ -24,8 +38,8 @@ class ForecastListViewModel: ObservableObject {
             }
             if let lat = placemarks?.first?.location?.coordinate.latitude,
                let lon = placemarks?.first?.location?.coordinate.longitude {*/
-            if location == "İstanbul" {
-                apiService.getJSON(urlString1: "http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=c75fa45f4752adf0fa8c01456807b64d",
+            
+                apiService.getJSON(urlString1: "https://api.openweathermap.org/data/2.5/forecast?id=524901&appid=c75fa45f4752adf0fa8c01456807b64d",
                                    dateDecodeingStrategy: .secondsSince1970) {
                     (result: Result<Forecast,APIService.APIError>) in
                     
@@ -42,7 +56,7 @@ class ForecastListViewModel: ObservableObject {
                         }
                     }
                 }
-            }
+            
                 /*
             }
         }*/
