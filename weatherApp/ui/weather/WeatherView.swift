@@ -10,31 +10,12 @@ import SwiftUI
 
 struct WeatherView: View {
     
+    @Environment(\.colorScheme) var colorScheme
     @StateObject private var forecastListVM = ForecastListViewModel()
     
-    
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
-                Picker(selection: $forecastListVM.system, label: Text("System")) {
-                    Text("°C").tag(0)
-                    Text("°F").tag(1)
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .frame(width: 200)
-                .padding(.vertical)
-                HStack {
-                    TextField("Location", text: $forecastListVM.location)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    Button {
-                        
-                        forecastListVM.getWeatherForecast()
-                    } label: {
-                        Image(systemName:"magnifyingglass.circle.fill")
-                            .font(.title3)
-                    }
-                    
-                }
                     
                 List(forecastListVM.forecasts, id: \.day) { day in
                         
@@ -67,7 +48,7 @@ struct WeatherView: View {
                 
             }
             .padding(.horizontal)
-        .navigationTitle("Weather")
+        .navigationTitle("Weather App")
         }
     }
     

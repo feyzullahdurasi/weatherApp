@@ -24,6 +24,11 @@ struct weatherAppApp: App {
                         Text("Search")
                     }
                 
+                SettingsView()
+                    .tabItem {
+                        Image(systemName: "gearshape.fill")
+                        Text("Settings")
+                    }
                 
             }
         }

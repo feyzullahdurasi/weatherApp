@@ -23,7 +23,7 @@ class ForecastListViewModel: ObservableObject {
     }
     
     init() {
-        if location == "" {
+        if location != "" {
             getWeatherForecast()
         }
     }
