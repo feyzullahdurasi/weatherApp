@@ -1,44 +1,78 @@
 //
-//  ContentView.swift
+//  WeatherView.swift
 //  weatherApp
 //
-//  Created by Feyzullah Durası on 2.07.2024.
+//  Created by Feyzullah Durası on 4.07.2024.
 //
 
+
 import SwiftUI
-import CoreLocation
 
 struct WeatherView: View {
     
-    @ObservedObject var viewModel = WeatherViewModel()
+    @StateObject private var forecastListVM = ForecastListViewModel()
     
-    @StateObject private var locationManager = LocationManager()
-    @State private var answer: weatherData?
+    
     var body: some View {
-        VStack {
-            if let answer = answer {
-                Text("Temperature: \(Int(answer.temprature))°C")
-                Text("Humidity: \(answer.humidity)%")
-                Text("Wind Speed: \(answer.wind) m/s")
-                Text("Description: \(answer.condition)")
-            } else {
-                ProgressView()
+        NavigationView {
+            VStack {
+                Picker(selection: $forecastListVM.system, label: Text("System")) {
+                    Text("C").tag(0)
+                    Text("F").tag(1)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .frame(width: 200)
+                .padding(.vertical)
+                HStack {
+                    TextField("Location", text: $forecastListVM.location)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    Button {
+                        
+                        forecastListVM.getWeatherForecast()
+                    } label: {
+                        Image(systemName:"magnifyingglass.circle.fill")
+                            .font(.title3)
+                    }
+                    
+                }
+                    
+                List(forecastListVM.forecasts, id: \.day) { day in
+                        
+                        VStack (alignment: .leading){
+                            Text(day.day)
+                                .fontWeight(.bold)
+                            HStack(alignment: .top) {
+                                Image(systemName: "hourglass")
+                                    .font(.title)
+                                    .frame(width: 50, height: 50)
+                                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.green))
+                                VStack(alignment: .leading) {
+                                    Text(day.overview)
+                                    Text("Temprature: \(day.Temprature)")
+                                    HStack {
+                                        Text("Max Temprature: \(day.High)")
+                                        Text("Min Temprature: \(day.Low)")
+                                    }
+                                    Text("Humidity: \(day.humidity)%")
+                                    Text("Wind Speed: \(day.wind)")
+                                    Text("Cloud: \(day.clouds)")
+                                }
+                            }
+                        }
+                           
+                        
+                    }
+                    .listStyle(PlainListStyle())
+                
+                
             }
+            .padding(.horizontal)
+        .navigationTitle("Weather")
         }
-        .onAppear{
-            locationManager.requestLocation()
-            viewModel.responseUpload()
-        }
-        .onReceive(locationManager.$location) { location in
-            
-           /* guard let location = location else { return }
-            viewModel.responseUpload*/
-            // gelen veri tabanında sadece moscow için bilgi geliyor.
-        }
-        
-        
     }
-
+    
+    
+    
 }
 
 #Preview {
