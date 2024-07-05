@@ -19,8 +19,9 @@ struct SearchView: View {
                     TextField("Location", text: $forecastListVM.location)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                     Button {
-                        
-                        forecastListVM.getWeatherForecast()
+                        Task {
+                            await forecastListVM.getWeatherForecast()
+                        }
                     } label: {
                         Image(systemName:"magnifyingglass.circle.fill")
                             .font(.title)

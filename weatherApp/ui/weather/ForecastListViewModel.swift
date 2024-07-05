@@ -12,7 +12,7 @@ import SwiftUI
 class ForecastListViewModel: ObservableObject {
     
     @Published var forecasts: [ForecastViewModel] = []
-    @AppStorage("location") var location: String = ""
+    @AppStorage("location") var location: String = "524901"
     @AppStorage("system") var system: Int = 0 {
     
         didSet {
@@ -21,44 +21,26 @@ class ForecastListViewModel: ObservableObject {
             }
         }
     }
-    
+
     init() {
-        if location != "" {
-            getWeatherForecast()
+        if !location.isEmpty {
+            Task {
+                await getWeatherForecast()
+            }
+        }
+    }
+
+    
+    func getWeatherForecast() async {
+        let apiService = APIService.shared
+        do {
+            let forecast: Forecast = try await apiService.getJSON(urlString1: "https://api.openweathermap.org/data/2.5/forecast?id=524901&appid=c75fa45f4752adf0fa8c01456807b64d")
+            DispatchQueue.main.async {
+                self.forecasts = forecast.list.map { ForecastViewModel(forecast: $0, system: self.system) }
+            }
+        } catch {
+            print("Error fetching weather forecast: \(error)")
         }
     }
     
-    
-     func getWeatherForecast() {
-        let apiService = APIService.shared
-        
-        /*CLGeocoder().geocodeAddressString(location) { (placemarks, error ) in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-            if let lat = placemarks?.first?.location?.coordinate.latitude,
-               let lon = placemarks?.first?.location?.coordinate.longitude {*/
-            
-                apiService.getJSON(urlString1: "https://api.openweathermap.org/data/2.5/forecast?id=524901&appid=c75fa45f4752adf0fa8c01456807b64d",
-                                   dateDecodeingStrategy: .secondsSince1970) {
-                    (result: Result<Forecast,APIService.APIError>) in
-                    
-                    switch result {
-                    case .success(let forecast):
-                        DispatchQueue.main.async {
-                            self.forecasts = forecast.list.map { ForecastViewModel(forecast: $0, system: self.system) }
-                        }
-                        
-                    case .failure(let apiError):
-                        switch apiError {
-                        case .error(let errorString):
-                            print(errorString)
-                        }
-                    }
-                }
-            
-                /*
-            }
-        }*/
-    }
 }

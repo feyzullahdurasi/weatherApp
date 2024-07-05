@@ -24,6 +24,9 @@ struct Forecast: Codable {
             
         }
         let weather: [Weather]
+        struct Cloud: Codable {
+            let all: Int
+        }
         let clouds: Int
         struct Wind: Codable {
             let speed: Double

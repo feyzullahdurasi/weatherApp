@@ -5,47 +5,30 @@
 //  Created by Feyzullah Durası on 3.07.2024.
 //
 
+import Foundation
 
-import UIKit
-
-public class APIService {
-    public static let shared = APIService()
+class APIService {
+    static let shared = APIService()
     
-    public enum APIError: Error {
-        case error(_ errorString: String)
+    func getJSON<T: Decodable>(urlString1: String, dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate) async throws -> T {
+        guard let url = URL(string: urlString1) else {
+            throw APIError.invalidURL
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw APIError.invalidResponse
+        }
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = dateDecodingStrategy
+        return try decoder.decode(T.self, from: data)
     }
     
-    public func getJSON<T: Decodable>(urlString1: String,
-                                      dateDecodeingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
-                                      keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy = .useDefaultKeys,
-                                      completion: @escaping (Result<T,APIError>) -> Void) {
-        guard let url = URL(string: urlString1) else {
-            completion(.failure(.error(NSLocalizedString("Error: Invalid URl", comment: ""))))
-            return
-        }
-        let request = URLRequest(url: url)
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                completion(.failure(.error(error.localizedDescription)))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(.error(NSLocalizedString("error: data us corrut", comment: ""))))
-                return
-            }
-            let decoder = JSONDecoder()
-            do {
-                let decodeData = try decoder.decode(T.self, from: data)
-                completion(.success(decodeData))
-                return
-                
-            } catch let decodingError {
-                completion(.failure(APIError.error("Error: \(decodingError.localizedDescription)")))
-                return
-            }
-            
-            
-        }.resume()
+    enum APIError: Error {
+        case invalidURL
+        case invalidResponse
+        case error(String)
     }
 }

@@ -14,13 +14,8 @@ struct SettingsView: View {
     @AppStorage("userTheme") private var userTheme: Theme = .systemDefault
     
     var body: some View {
-        
-            
-            
             NavigationStack {
                 List {
-                   
-                    
                     Section("Appearance"){
                         Picker(selection: $forecastListVM.system, label: Text("System")) {
                             Text("°C").tag(0)
