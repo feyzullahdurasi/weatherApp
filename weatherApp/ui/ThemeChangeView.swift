@@ -24,7 +24,7 @@ struct ThemeChangeView: View {
                             ZStack {
                                 if userTheme == theme {
                                     Capsule()
-                                        .fill(.white)
+                                        .fill(.gray)
                                         .matchedGeometryEffect(id: "ACTIVE", in: animation)
                                 }
                             }
@@ -43,7 +43,7 @@ struct ThemeChangeView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .frame(height: 410)
-        .background(.white)
+        .background()
         .clipShape(.rect(cornerRadius: 30))
         .padding(.horizontal, 159)
     }

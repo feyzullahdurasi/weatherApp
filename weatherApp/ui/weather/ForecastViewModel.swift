@@ -11,19 +11,19 @@ struct ForecastViewModel {
     let forecast: Forecast.List
     var system: Int
     
-    private static var dateformatter: DateFormatter {
+    static var dateformatter: DateFormatter {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, MMM, d"
+        dateFormatter.dateFormat = "d MMM E H:mm"
         return dateFormatter
     }
     
-    private static var numberFormatter: NumberFormatter {
+    static var numberFormatter: NumberFormatter {
         let numberFormetter = NumberFormatter()
         numberFormetter.maximumFractionDigits = 0
         return numberFormetter
     }
     
-    private static var numberFormatter2: NumberFormatter {
+    static var numberFormatter2: NumberFormatter {
         let numberFormetter = NumberFormatter()
         numberFormetter.numberStyle = .percent
         return numberFormetter
@@ -32,9 +32,20 @@ struct ForecastViewModel {
     func convert(_ temp: Double) -> Double {
         let celcius = temp - 273.5
         if system == 0 {
+            
             return celcius
         } else {
             return celcius * 9 / 5 + 32
+        }
+    }
+    
+    func convert2() -> String {
+        var tempdegree = "°C"
+        if system == 0 {
+            return tempdegree
+        } else {
+            tempdegree = "°F"
+            return tempdegree
         }
     }
     var day: String {
@@ -45,28 +56,8 @@ struct ForecastViewModel {
         forecast.weather[0].description.capitalized
     }
     
-    var Temprature: String {
-        return "T: \(ForecastViewModel.numberFormatter.string(from: convert(forecast.main.temp) as NSNumber) ?? "0")"
-    }
-    
-    var High: String {
-        return "H: \(ForecastViewModel.numberFormatter.string(from: convert(forecast.main.temp_max) as NSNumber) ?? "0")"
-    }
-    
-    var Low: String {
-        return "L: \(ForecastViewModel.numberFormatter.string(from: convert(forecast.main.temp_min) as NSNumber) ?? "0")"
-    }
-    
-    var wind: String {
-        return "💨 \(forecast.wind.speed)"
-    }
-    
-    var clouds: String {
-        return "☁️ \(forecast.clouds)"
-    }
-    
-    var humidity: String {
-        return "Humidity: \(ForecastViewModel.numberFormatter.string(from: forecast.main.humidity as NSNumber) ?? "0")%"
+    var temperature: String {
+        return "\(ForecastViewModel.numberFormatter.string(from: convert(forecast.main.temp) as NSNumber) ?? "0")\(convert2())"
     }
     var weatherIconURL: URL {
         let urlString1 = "https://openweathermap.org/img/wn/\(forecast.weather[0].icon)@2x.png"

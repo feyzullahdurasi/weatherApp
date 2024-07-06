@@ -30,8 +30,8 @@ struct SearchView: View {
                 }
                     
                 List(forecastListVM.forecasts, id: \.day) { day in
-                        
-                        VStack (alignment: .leading){
+                    NavigationLink(destination: DetailView(weatherDetailVM: DetailViewModel(forecast: day.forecast, system: day.system))) {
+                        VStack(alignment: .leading) {
                             Text(day.day)
                                 .fontWeight(.bold)
                             HStack(alignment: .top) {
@@ -39,28 +39,26 @@ struct SearchView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 75)
-                                VStack(alignment: .leading) {
+                                Spacer()
+                                
+                                VStack {
+                                    Text("\(day.temperature)")
+                                        .font(.system(size: 30))
                                     Text(day.overview)
-                                    Text("Temprature: \(day.Temprature)")
-                                    HStack {
-                                        Text("Max Temprature: \(day.High)")
-                                        Text("Min Temprature: \(day.Low)")
-                                    }
-                                    Text("Humidity: \(day.humidity)%")
-                                    Text("Wind Speed: \(day.wind)")
-                                    Text("Cloud: \(day.clouds)")
                                 }
+                                
+                                
+                                
+                                
                             }
                         }
-                           
-                        
                     }
-                    .listStyle(PlainListStyle())
-                
+                }
+                .listStyle(PlainListStyle())
                 
             }
             .padding(.horizontal)
-        .navigationTitle("Search")
+            .navigationTitle("Search")
         }
     }
         

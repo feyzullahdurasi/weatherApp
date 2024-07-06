@@ -56,7 +56,6 @@ enum Theme : String, CaseIterable {
             return .light
         case .dark:
             return .dark
-
         }
     }
 }

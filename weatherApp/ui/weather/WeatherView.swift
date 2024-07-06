@@ -17,32 +17,33 @@ struct WeatherView: View {
         NavigationView {
             VStack {
                 List(forecastListVM.forecasts, id: \.day) { day in
-                    VStack (alignment: .leading){
-                        Text(day.day)
-                            .fontWeight(.bold)
-                        HStack(alignment: .top) {
-                            WebImage(url: day.weatherIconURL)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 75)
-                            VStack(alignment: .leading) {
-                                Text(day.overview)
-                                Text("Temprature: \(day.Temprature)")
-                                HStack {
-                                    Text("Max Temprature: \(day.High)")
-                                    Text("Min Temprature: \(day.Low)")
+                    NavigationLink(destination: DetailView(weatherDetailVM: DetailViewModel(forecast: day.forecast, system: day.system))) {
+                        VStack(alignment: .leading) {
+                            Text(day.day)
+                                .fontWeight(.bold)
+                            HStack(alignment: .top) {
+                                WebImage(url: day.weatherIconURL)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 75)
+                                Spacer()
+                                
+                                VStack {
+                                    Text("\(day.temperature)")
+                                        .font(.system(size: 30))
+                                    Text(day.overview)
                                 }
-                                Text("Humidity: \(day.humidity)%")
-                                Text("Wind Speed: \(day.wind)")
-                                Text("Cloud: \(day.clouds)")
+                                
                             }
                         }
                     }
                 }
                 .listStyle(PlainListStyle())
+                
             }
             .padding(.horizontal)
             .navigationTitle("Weather App")
+            
             .onAppear {
                 Task {
                     await forecastListVM.getWeatherForecast()
