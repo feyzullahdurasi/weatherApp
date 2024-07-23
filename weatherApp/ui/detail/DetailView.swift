@@ -23,8 +23,6 @@ struct DetailView: View {
             
             VStack(alignment: .center) {
                 
-                    
-                    
                     Text(weatherDetailVM.temperature)
                     .font(.system(size: 50))
                 

@@ -15,20 +15,40 @@ class APIService {
             throw APIError.invalidURL
         }
         
-        let (data, response) = try await URLSession.shared.data(from: url)
-        
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            throw APIError.invalidResponse
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                throw APIError.invalidResponse(statusCode: (response as? HTTPURLResponse)?.statusCode ?? -1)
+            }
+            
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = dateDecodingStrategy
+            return try decoder.decode(T.self, from: data)
+        } catch let error as APIError {
+            throw error
+        } catch {
+            throw APIError.networkError(error)
         }
-        
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = dateDecodingStrategy
-        return try decoder.decode(T.self, from: data)
     }
     
     enum APIError: Error {
-        case invalidURL
-        case invalidResponse
-        case error(String)
-    }
+            case invalidURL
+            case invalidResponse(statusCode: Int)
+            case decodingError(Error)
+            case networkError(Error)
+            
+            var userErrorMessage: String {
+                switch self {
+                case .invalidURL:
+                    return "Geçersiz bir URL ile karşılaşıldı. Lütfen URL'yi kontrol edin."
+                case .invalidResponse(let statusCode):
+                    return "Sunucu yanıtında bir hata oluştu. Durum kodu: \(statusCode)."
+                case .decodingError:
+                    return "Veri işlenirken bir hata oluştu."
+                case .networkError:
+                    return "Ağ bağlantısı sırasında bir hata oluştu."
+                }
+            }
+        }
 }
