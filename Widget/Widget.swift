@@ -1,6 +1,5 @@
 import WidgetKit
 import SwiftUI
-import SDWebImageSwiftUI
 
 struct WeatherEntry: TimelineEntry {
     let date: Date
@@ -209,15 +208,8 @@ struct SmallWeatherWidgetView: View {
         VStack {
             Text(entry.day)
                 .font(.headline)
-            /*WebImage(url: entry.weatherIconURL)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50, height: 50)*/
-            Image(systemName: "sun.max.fill")  // veya uygun başka bir sistem ikonu
-                .resizable()
-                .scaledToFit()
+            RemoteImage(url: entry.weatherIconURL.absoluteString)
                 .frame(width: 50, height: 50)
-                .foregroundColor(.red)
             
             Text(entry.temperature)
                 .font(.title)
@@ -234,15 +226,8 @@ struct MediumWeatherWidgetView: View {
             VStack {
                 Text(entry.day)
                     .font(.headline)
-                /*WebImage(url: entry.weatherIconURL)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)*/
-                Image(systemName: "sun.max.fill")  // veya uygun başka bir sistem ikonu
-                    .resizable()
-                    .scaledToFit()
+                RemoteImage(url: entry.weatherIconURL.absoluteString)
                     .frame(width: 50, height: 50)
-                    .foregroundColor(.red)
             }
             
             VStack(alignment: .leading) {
@@ -265,15 +250,8 @@ struct LargeWeatherWidgetView: View {
         VStack {
             Text(entry.day)
                 .font(.headline)
-           /* WebImage(url: entry.weatherIconURL)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 100, height: 100)*/
-            Image(systemName: "sun.max.fill")  // veya uygun başka bir sistem ikonu
-                .resizable()
-                .scaledToFit()
+            RemoteImage(url: entry.weatherIconURL.absoluteString)
                 .frame(width: 100, height: 100)
-                .foregroundColor(.red)
             Text(entry.temperature)
                 .font(.largeTitle)
             Text(entry.overview)
@@ -289,7 +267,6 @@ struct LargeWeatherWidgetView: View {
         .padding()
     }
 }
-
 
 struct WeatherWidget: Widget {
     let kind: String = "WeatherWidget"
@@ -322,3 +299,46 @@ struct WeatherWidgetEntryView: View {
     }
 }
 
+
+struct RemoteImage: View {
+    @StateObject private var loader: ImageLoader
+    private let placeholder: Image
+
+    init(url: String, placeholder: Image = Image(systemName: "photo")) {
+        _loader = StateObject(wrappedValue: ImageLoader(url: url))
+        self.placeholder = placeholder
+    }
+
+    var body: some View {
+        if let image = loader.image {
+            Image(uiImage: image)
+                .resizable()
+        } else {
+            placeholder
+                .resizable()
+        }
+    }
+}
+
+class ImageLoader: ObservableObject {
+    @Published var image: UIImage?
+
+    private let url: String
+
+    init(url: String) {
+        self.url = url
+        load()
+    }
+
+    private func load() {
+        guard let url = URL(string: url) else { return }
+
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            guard let data = data, error == nil, let uiImage = UIImage(data: data) else { return }
+
+            DispatchQueue.main.async {
+                self.image = uiImage
+            }
+        }.resume()
+    }
+}
